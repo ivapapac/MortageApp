@@ -1,5 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:mortage_app/util/colors.dart';
 
 class MortgageApp extends StatefulWidget {
   @override
@@ -11,154 +15,167 @@ class _MortgageAppState extends State<MortgageApp> {
   int _lengthOfLoan = 0;
   double _homePrice = 0.0;
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-       appBar: AppBar(
-          title: Text("Mortgage Payments"),
-       ),
-    body: Container(
-       alignment: Alignment.center,
-      child: ListView(
-          scrollDirection: Axis.vertical,
-        children: <Widget>[
-          Container(
-            height: 130,
-             child: Card(
-                elevation: 5,
-               child: Column(
-                 mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                      Text("Monthly Payment"),
-                      SizedBox(height: 9),
-                    Text(" ${ ( _homePrice > 0 && _interest > 0.0) ? "\$${calculateMonthlyPayment(_homePrice, _interest, _lengthOfLoan)}" : ""}")
-                  ],
-               ),
-             ),
-          ),
+    TextTheme _typography = Theme.of(context).textTheme;
+    ColorScheme _colors = Theme.of(context).colorScheme;
 
-          Container(
-            margin: EdgeInsets.only(top: 20),
-             decoration: BoxDecoration(
-               color: Colors.transparent,
-               border: Border.all(
-                  color: Colors.blueGrey.shade100, //TODO: theme this!
-                 style: BorderStyle.solid// //TODO: theme this!
-               ),
-               borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                 children: <Widget>[
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Mortgage Payments"),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            Container(
+              height: 130,
+              child: Card(
+                elevation: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Monthly Payment",
+                      style: _typography.headline6,
+                    ),
+                    const SizedBox(height: 9),
+                    Text(
+                      " ${(_homePrice > 0 && _interest > 0.0) ? "\$${calculateMonthlyPayment(_homePrice, _interest, _lengthOfLoan)}" : ""}",
+                      style: _typography.headline5,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(
+                      color: _colors.tertiary, //TODO: theme this!
+                      style: BorderStyle.solid // //TODO: theme this!
+                      ),
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  children: <Widget>[
                     TextField(
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
-                      style: TextStyle(color: Colors.black),//TODO: theme this!
-                      decoration: InputDecoration(
-                         prefixText: "Home Price",
-                         prefixIcon: Icon(Icons.home)),
+                      style: _typography.bodyText1,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                          hintText: "Home Price", prefixIcon: Icon(Icons.home)),
                       onChanged: (String value) {
                         try {
                           _homePrice = double.parse(value);
-
-                        }catch (exception) {
-                           _homePrice = 0.0;
+                        } catch (exception) {
+                          _homePrice = 0.0;
                         }
-
-                      },//TODO: theme this!
+                      },
                     ),
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: <Widget>[
-                       Text("Length of Loan (years)"), //TODO: Theme this!
-
-                       Row(
-                         children: <Widget>[
-                           InkWell(
-                             onTap: () {
-                               setState(() {
-                                 if(_lengthOfLoan > 0) {
-                                   _lengthOfLoan -= 5;
-                                 }else {
-                                   // do nothing
-                                 }
-                               });
-                             },
-                             child: Container(
-                               width: 40,
-                               height: 40,
-                               margin: EdgeInsets.all(10),
-                               decoration: BoxDecoration(
-                                   borderRadius: BorderRadius.circular(16),
-                                   color: Colors.blueGrey.withOpacity(0.2)
-                               ),
-                               child: Center(child: Text("-")), //TODO: Style Theme it!
-                             ),
-                           ),
-                           Text("$_lengthOfLoan"), //TODO: Style Theme it!
-                           InkWell(
-                               onTap: () {
-                                  setState(() {
-
-                                     _lengthOfLoan += 5;
-                                  });
-                               },
-                             child: Container(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Length of Loan (years)",
+                          style: _typography.bodyText1,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (_lengthOfLoan > 0) {
+                                    _lengthOfLoan -= 5;
+                                  } else {
+                                    // do nothing
+                                  }
+                                });
+                              },
+                              child: Container(
                                 width: 40,
-                               height: 40,
-                               margin: EdgeInsets.all(10),
-                               decoration: BoxDecoration(
-                                   color: Colors.blueGrey.withOpacity(0.2),
-                                 borderRadius: BorderRadius.circular(16)
-                               ),
-                               child: Center(child:Text("+")) //TODO: theme this!
+                                height: 40,
+                                margin: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Colors.blueGrey.withOpacity(0.2)),
+                                child: Center(
+                                    child: Text(
+                                  "-",
+                                  style: _typography.bodyText1,
+                                )),
+                              ),
+                            ),
+                            Text(
+                              "$_lengthOfLoan",
+                              style: _typography.bodyText1,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _lengthOfLoan += 5;
+                                });
+                              },
+                              child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  margin: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueGrey.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(16)),
+                                  child: Center(
+                                      child: Text(
+                                    "+",
+                                    style: _typography.bodyText1,
+                                  ))),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
 
-                             ),
-                           )
-                         ],
-                       )
-                     ],
-                   ),
+                    //Interest
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Interest",
+                          style: _typography.bodyText1,
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              "${_interest.toStringAsFixed(2)} %",
+                              style: _typography.bodyText1,
+                            ))
+                      ],
+                    ),
 
-                   //Interest
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: <Widget>[
-                        Text("Interest"), ////TODO: theme this!
-                       Padding(padding: EdgeInsets.all(18), child:Text("${_interest.toStringAsFixed(2)} %") )
-                     ],
-                   ),
-
-                   //Slider
-                   Column(
+                    //Slider
+                    Column(
                       children: <Widget>[
                         Slider(
                             min: 0.0,
                             max: 10.0,
-                            activeColor: Colors.red , //TODO: Theme this!
-                            inactiveColor: Colors.grey, //TODO: Theme this!
-                           // divisions: 10,
                             value: _interest,
                             onChanged: (double newValue) {
-                                  setState(() {
-
-                                     _interest = newValue;
-                                  });
+                              setState(() {
+                                _interest = newValue;
+                              });
                             })
                       ],
-                   )
-
-                 ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          )
-          
-          
-        ],
+            )
+          ],
+        ),
       ),
-    ),
     );
-    
   }
 
   //Monthly Payment Formula
@@ -171,19 +188,18 @@ class _MortgageAppState extends State<MortgageApp> {
    double payment = loan * c * Math.pow(1 + c, n) /
                     (Math.pow(1 + c, n) - 1);
    */
-   calculateMonthlyPayment(double homePrice, double interest, int loanLength ) {
-     int n = 12 * loanLength;
-     double c = interest / 12.0 / 100.0;
-     double monthlyPayment = 0.0;
+  calculateMonthlyPayment(double homePrice, double interest, int loanLength) {
+    int n = 12 * loanLength;
+    double c = interest / 12.0 / 100.0;
+    double monthlyPayment = 0.0;
 
-     if (homePrice < 0 || homePrice.toString().isEmpty || homePrice == null) {
-        //no go!
+    if (homePrice < 0 || homePrice.toString().isEmpty || homePrice == null) {
+      //no go!
       // _homePrice = 0.0;
-     }else {
-       monthlyPayment = homePrice * c * pow(1 + c, n) / (pow(1 + c, n) - 1);
-     }
+    } else {
+      monthlyPayment = homePrice * c * pow(1 + c, n) / (pow(1 + c, n) - 1);
+    }
 
-
-     return monthlyPayment.toStringAsFixed(2);
+    return monthlyPayment.toStringAsFixed(2);
   }
 }
